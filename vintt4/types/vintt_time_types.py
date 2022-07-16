@@ -10,7 +10,7 @@ class VinttTime(TypedDict):
     """time information for a process"""
 
     totalTime:int
-    """total time of the process (s)"""
+    """total time of the process (min)"""
 
     categoryTime:Dict[str,int]
-    """time per category. key: category name, val: the time (s)"""
+    """time per category. key: category name, val: the time (min)"""
