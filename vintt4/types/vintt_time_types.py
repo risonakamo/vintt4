@@ -1,5 +1,8 @@
 from typing import TypedDict,Dict
 
+CategoryTime=Dict[str,int]
+"""time per category. key: category name, val: the time (min)"""
+
 class VinttTimeFile(TypedDict):
     """time file storage"""
 
@@ -12,5 +15,4 @@ class VinttTime(TypedDict):
     totalTime:int
     """total time of the process (min)"""
 
-    categoryTime:Dict[str,int]
-    """time per category. key: category name, val: the time (min)"""
+    categoryTime:CategoryTime
