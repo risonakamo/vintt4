@@ -1,0 +1,1 @@
+uvicorn vintt4:app --host 0.0.0.0 --port 4301
