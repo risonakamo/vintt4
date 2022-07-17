@@ -4,3 +4,7 @@ trackItems:
     categories:
       - common
       - something else
+
+  notepad.exe:
+    displayName: notepad
+    categories: []
