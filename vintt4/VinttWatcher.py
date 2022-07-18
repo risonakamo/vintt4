@@ -13,6 +13,14 @@ from vintt4.types.vintt_time_types import VinttTimeFile
 
 WATCH_LOOP_INTERVAL_S:int=10
 
+DEFAULT_WATCH:CurrentWatch={
+    "name":"",
+    "currentTime":0,
+    "currentCategory":"",
+    "totalTime":0,
+    "categoryTime":{}
+}
+
 class VinttWatch:
     trackProcess:Optional[str]
     category:str
@@ -93,13 +101,7 @@ class VinttWatch:
 
         # missing information, return default/empty current watch
         if not (self.trackProcess and self.cachedTimefile and self.trackItem):
-            return {
-                "name":"",
-                "currentTime":0,
-                "currentCategory":"",
-                "totalTime":0,
-                "categoryTime":{}
-            }
+            return DEFAULT_WATCH
 
         return {
             "name":self.trackItem.displayName,

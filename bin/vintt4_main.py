@@ -2,10 +2,12 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.concurrency import run_in_threadpool
 from asyncio import ensure_future
+from loguru import logger
 
-from vintt4.VinttWatcher import VinttWatch
+from vintt4.VinttWatcher import VinttWatch,DEFAULT_WATCH
 
 from typing import Optional
+from vintt4.types.vintt_watch_types import CurrentWatch
 
 app:FastAPI=FastAPI()
 vinttwatch:Optional[VinttWatch]=None
@@ -22,15 +24,18 @@ def dowatch():
 
 ensure_future(run_in_threadpool(dowatch))
 
-@app.get("/hello")
-def test():
-    print("?")
-    if not vinttwatch:
-        print("no watch")
-        return
 
-    print(vinttwatch.getCurrentWatch())
-    return "adad"
+# --- routes ---
+@app.get("/get-watch")
+def getwatch()->CurrentWatch:
+    """get the current watch, or default if watch not started"""
+
+    if not vinttwatch:
+        logger.error("no watch")
+        return DEFAULT_WATCH
+
+    return vinttwatch.getCurrentWatch()
+
 
 # --- static ---
 app.mount("/",
