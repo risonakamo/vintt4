@@ -7,4 +7,6 @@ trackItems:
 
   notepad.exe:
     displayName: notepad
-    categories: []
+    categories:
+      - none
+      - cate1
