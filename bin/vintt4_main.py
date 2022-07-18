@@ -8,6 +8,7 @@ from vintt4.VinttWatcher import VinttWatch,DEFAULT_WATCH
 
 from typing import Optional
 from vintt4.types.vintt_watch_types import CurrentWatch
+from vintt4.types.web_api_types import SetCategoryReq
 
 app:FastAPI=FastAPI()
 vinttwatch:Optional[VinttWatch]=None
@@ -35,6 +36,17 @@ def getwatch()->CurrentWatch:
         return DEFAULT_WATCH
 
     return vinttwatch.getCurrentWatch()
+
+@app.post("/set-category")
+def setcategory(setCategoryReq:SetCategoryReq)->None:
+    """set category api"""
+
+    if not vinttwatch:
+        logger.error("no watch")
+        return
+
+    logger.info("setting category: {}",setCategoryReq.category)
+    vinttwatch.changeCategory(setCategoryReq.category)
 
 
 # --- static ---
