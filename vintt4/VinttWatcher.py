@@ -91,7 +91,7 @@ class VinttWatch:
             logger.warning("tried to change category but no process being tracked")
             return
 
-        if not category in self.trackItem.categories:
+        if not category in (self.trackItem.categories or []):
             logger.warning("changing to category not present in config: {}",category)
 
         self.category=category
@@ -110,6 +110,6 @@ class VinttWatch:
             "totalTime":self.cachedTimefile["trackedItems"][self.trackProcess]["totalTime"],
             "categoryTime":addCategoryTimeDefaults(
                 self.cachedTimefile["trackedItems"][self.trackProcess]["categoryTime"],
-                self.trackItem.categories
+                self.trackItem.categories or []
             )
         }

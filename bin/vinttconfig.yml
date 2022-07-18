@@ -10,3 +10,9 @@ trackItems:
     categories:
       - none
       - cate1
+
+  Code.exe:
+    displayName: code
+    categories:
+      - none
+      - vintt

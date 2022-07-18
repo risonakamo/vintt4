@@ -1,13 +1,13 @@
 from __future__ import annotations
 from pydantic import BaseModel
 
-from typing import TypedDict,Dict,List
+from typing import TypedDict,Dict,List,Optional
 
 class VinttTrackItem(BaseModel):
     """item to be tracked"""
 
     displayName:str
-    categories:List[str]
+    categories:Optional[List[str]]
     """list of categories for the track item"""
 
 class VinttConfig(BaseModel):
