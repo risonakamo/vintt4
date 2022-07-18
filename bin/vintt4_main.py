@@ -1,20 +1,36 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from asyncio import create_task
+from fastapi.concurrency import run_in_threadpool
+from asyncio import ensure_future
 
 from vintt4.VinttWatcher import VinttWatch
 
-app:FastAPI=FastAPI()
+from typing import Optional
 
-async def startwatcher():
-    VinttWatch(
+app:FastAPI=FastAPI()
+vinttwatch:Optional[VinttWatch]=None
+
+def dowatch():
+    """begin watching"""
+
+    global vinttwatch
+    vinttwatch=VinttWatch(
         configpath="vinttconfig.yml",
         timefile="timefile.yml"
     )
+    vinttwatch.watchForProcess()
 
-@app.on_event("startup")
-async def serverstart():
-    create_task(startwatcher())
+ensure_future(run_in_threadpool(dowatch))
+
+@app.get("/hello")
+def test():
+    print("?")
+    if not vinttwatch:
+        print("no watch")
+        return
+
+    print(vinttwatch.getCurrentWatch())
+    return "adad"
 
 # --- static ---
 app.mount("/",

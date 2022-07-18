@@ -70,3 +70,14 @@ def addCategoryTimeDefaults(categorytime:CategoryTime,categories:List[str])->Cat
             newcattime[category]=0
 
     return newcattime
+
+def ensureProcessInTimefile(timefile:VinttTimeFile,process:str)->VinttTimeFile:
+    """modify timefile to include the specified process, if not existing"""
+
+    if process not in timefile["trackedItems"]:
+        timefile["trackedItems"][process]={
+            "totalTime":0,
+            "categoryTime":{}
+        }
+
+    return timefile

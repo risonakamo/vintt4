@@ -3,14 +3,15 @@ from time import sleep
 
 from vintt4.vintt_config import loadVinttConfig
 from vintt4.process_watch import waitForProcess
-from vintt4.vintt_time import incrementTime,addCategoryTimeDefaults
+from vintt4.vintt_time import (incrementTime,addCategoryTimeDefaults,getVinttTimeFile,
+    ensureProcessInTimefile)
 
 from typing import List,Optional
 from vintt4.types.vintt_config_types import VinttConfig,VinttTrackItem
 from vintt4.types.vintt_watch_types import CurrentWatch
 from vintt4.types.vintt_time_types import VinttTimeFile
 
-WATCH_LOOP_INTERVAL_S:int=60
+WATCH_LOOP_INTERVAL_S:int=10
 
 class VinttWatch:
     trackProcess:Optional[str]
@@ -19,6 +20,7 @@ class VinttWatch:
 
     trackItem:Optional[VinttTrackItem]
 
+    configpath:str
     timefile:str
     cachedTimefile:Optional[VinttTimeFile]
 
@@ -29,13 +31,12 @@ class VinttWatch:
         self.trackItem=None
         self.timefile=timefile
         self.cachedTimefile=None
+        self.configpath=configpath
 
-        self.watchForProcess(configpath)
-
-    def watchForProcess(self,configpath:str)->None:
+    def watchForProcess(self)->None:
         """begin main logic. watch for process then begin the watch loop once found"""
 
-        config:VinttConfig=loadVinttConfig(configpath)
+        config:VinttConfig=loadVinttConfig(self.configpath)
 
         watchProcesses:List[str]=list(config.trackItems.keys())
 
@@ -50,6 +51,10 @@ class VinttWatch:
 
         self.trackProcess=foundProcess
         self.trackItem=config.trackItems[foundProcess]
+        self.cachedTimefile=ensureProcessInTimefile(
+            getVinttTimeFile(self.timefile),
+            foundProcess
+        )
 
         self.watchLoop()
 
@@ -63,7 +68,7 @@ class VinttWatch:
                 raise Exception("watch loop but no track process")
 
             logger.debug("writing to file")
-            incrementTime(
+            self.cachedTimefile=incrementTime(
                 process=self.trackProcess,
                 category=self.category,
                 time=1,
@@ -100,9 +105,9 @@ class VinttWatch:
             "name":self.trackItem.displayName,
             "currentTime":self.currentTime,
             "currentCategory":self.category,
-            "totalTime":self.cachedTimefile[self.trackProcess]["totalTime"],
+            "totalTime":self.cachedTimefile["trackedItems"][self.trackProcess]["totalTime"],
             "categoryTime":addCategoryTimeDefaults(
-                self.cachedTimefile[self.trackProcess]["categoryTime"],
+                self.cachedTimefile["trackedItems"][self.trackProcess]["categoryTime"],
                 self.trackItem.categories
             )
         }
