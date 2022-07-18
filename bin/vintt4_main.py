@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.concurrency import run_in_threadpool
 from asyncio import ensure_future
 from loguru import logger
+from subprocess import Popen
 
 from vintt4.VinttWatcher import VinttWatch,DEFAULT_WATCH
 
@@ -57,3 +58,5 @@ app.mount("/",
     ),
     name="root"
 )
+
+Popen("chrome --window-size=500,300 --new-window http://localhost:4301")
