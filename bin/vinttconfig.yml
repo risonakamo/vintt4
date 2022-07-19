@@ -22,3 +22,6 @@ trackItems:
     categories:
       - hisagi
       - mizore
+
+  # chrome.exe:
+  #   displayName: chrome

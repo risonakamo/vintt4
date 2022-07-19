@@ -1,12 +1,13 @@
 from loguru import logger
 from time import sleep
+from traceback import print_exc
 
 from vintt4.vintt_config import loadVinttConfig
 from vintt4.process_watch import waitForProcess
 from vintt4.vintt_time import (incrementTime,addCategoryTimeDefaults,getVinttTimeFile,
     ensureProcessInTimefile)
 
-from typing import List,Optional
+from typing import List,Optional,Set
 from vintt4.types.vintt_config_types import VinttConfig,VinttTrackItem
 from vintt4.types.vintt_watch_types import CurrentWatch
 from vintt4.types.vintt_time_types import VinttTimeFile
@@ -33,6 +34,8 @@ class VinttWatch:
     timefile:str
     cachedTimefile:Optional[VinttTimeFile]
 
+    config:Optional[VinttConfig]
+
     def __init__(self,configpath:str,timefile:str):
         self.trackProcess=None
         self.category="none"
@@ -41,25 +44,39 @@ class VinttWatch:
         self.timefile=timefile
         self.cachedTimefile=None
         self.configpath=configpath
+        self.config=None
+
+    def computeWatchProcesses(self)->Set[str]:
+        """load the vintt config and get the watch processes"""
+
+        try:
+            self.config=loadVinttConfig(self.configpath)
+
+        except:
+            logger.warning("load vintt config failed, fix config")
+            print_exc()
+            return set()
+
+        return set(self.config.trackItems.keys())
 
     def watchForProcess(self)->None:
         """begin main logic. watch for process then begin the watch loop once found"""
 
-        config:VinttConfig=loadVinttConfig(self.configpath)
-
-        watchProcesses:List[str]=list(config.trackItems.keys())
-
         logger.info("watching...")
-        foundProcess:str=waitForProcess(watchProcesses)
+        foundProcess:str=waitForProcess(self.computeWatchProcesses)
 
-        if not foundProcess in config.trackItems:
+        if not self.config:
+            logger.error("completed wait for process, but missing config")
+            raise Exception("no config")
+
+        if not foundProcess in self.config.trackItems:
             logger.error("somehow found process was not on track item list")
             raise Exception("found process track list mismatch")
 
         logger.info("tracking: {}",foundProcess)
 
         self.trackProcess=foundProcess
-        self.trackItem=config.trackItems[foundProcess]
+        self.trackItem=self.config.trackItems[foundProcess]
         self.cachedTimefile=ensureProcessInTimefile(
             getVinttTimeFile(self.timefile),
             foundProcess

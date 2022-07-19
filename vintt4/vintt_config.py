@@ -12,7 +12,7 @@ def loadVinttConfig(path:str)->VinttConfig:
             return VinttConfig.parse_obj(safe_load(file))
 
     except ValidationError:
-        logger.error("invalid vintt config, exiting")
+        logger.error("invalid vintt config")
         raise Exception("validation error")
 
     except FileNotFoundError:

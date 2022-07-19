@@ -1,14 +1,19 @@
 from psutil import process_iter,Process
 from time import sleep
 
-from typing import List,Set
+from typing import List,Set,Union,Callable
 
-def waitForProcess(processes:List[str])->str:
-    """wait for process in given list to exist. returns the found process"""
+WaitProcessesCallback=Callable[[],Set[str]]
+"""callback the produces a list of processes to wait for. should return a set of processes"""
 
-    processSet:Set[str]=set(processes)
+def waitForProcess(processesCallback:WaitProcessesCallback)->str:
+    """uses given processes callback to create a list of processes (actually a set).
+    checks if any of the processes in that set exist, if it does, then return the name
+    of that process. the process callback gets called each wait cycle"""
 
     while True:
+        processSet:Set[str]=processesCallback()
+
         for process in process_iter():
             process:Process
 
