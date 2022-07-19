@@ -7,6 +7,7 @@ from subprocess import Popen
 from os import system
 
 from vintt4.VinttWatcher import VinttWatch,DEFAULT_WATCH
+import vintt4.log_control
 
 from typing import Optional
 from vintt4.types.vintt_watch_types import CurrentWatch
