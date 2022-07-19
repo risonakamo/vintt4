@@ -11,7 +11,8 @@ from vintt4.types.vintt_config_types import VinttConfig,VinttTrackItem
 from vintt4.types.vintt_watch_types import CurrentWatch
 from vintt4.types.vintt_time_types import VinttTimeFile
 
-WATCH_LOOP_INTERVAL_S:int=10
+WATCH_LOOP_INTERVAL_S:int=60
+"""seconds until adding 1 to the timefile. needs to be at 60 to be real time"""
 
 DEFAULT_WATCH:CurrentWatch={
     "name":"",
