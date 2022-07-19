@@ -4,6 +4,7 @@ from fastapi.concurrency import run_in_threadpool
 from asyncio import ensure_future
 from loguru import logger
 from subprocess import Popen
+from os import system
 
 from vintt4.VinttWatcher import VinttWatch,DEFAULT_WATCH
 
@@ -49,6 +50,17 @@ def setcategory(setCategoryReq:SetCategoryReq)->None:
     logger.info("setting category: {}",setCategoryReq.category)
     vinttwatch.changeCategory(setCategoryReq.category)
 
+@app.get("/open-config")
+def openconfig()->None:
+    """open config with system default program"""
+
+    system("start vinttconfig.yml")
+
+@app.get("/open-timefile")
+def opentimefile()->None:
+    """open timefile with system default program"""
+
+    system("start timefile.yml")
 
 # --- static ---
 app.mount("/",
@@ -59,4 +71,4 @@ app.mount("/",
     name="root"
 )
 
-Popen("chrome --window-size=500,300 --new-window http://localhost:4301")
+Popen("chrome --window-size=500,500 --new-window http://localhost:4301")
