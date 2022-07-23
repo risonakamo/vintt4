@@ -6,6 +6,10 @@ setup(
 
     python_requires=">=3.9",
     install_requires=[
-        "psutil"
+        "psutil",
+        "loguru",
+        "fastapi",
+        "pyyaml",
+        "pydantic"
     ]
 )
