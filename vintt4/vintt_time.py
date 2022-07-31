@@ -1,5 +1,7 @@
 from yaml import safe_load,safe_dump
 from loguru import logger
+from os.path import abspath
+from traceback import print_exc
 
 from typing import List,Set
 from vintt4.types.vintt_time_types import VinttTimeFile,CategoryTime
@@ -36,15 +38,20 @@ def getVinttTimeFile(path:str)->VinttTimeFile:
     """get vintt time file from location. return default if failed to find file"""
 
     try:
-        with open(path,"r") as timefile:
+        with open(path,"r",encoding="utf8") as timefile:
             return safe_load(timefile)
 
-    except:
-        logger.warning("failed to find timefile at {}",path)
+    except FileNotFoundError:
+        logger.warning("failed to find timefile at {}",abspath(path))
 
         return {
             "trackedItems":{}
         }
+
+    except Exception as err:
+        logger.error("other error occured while loading timefile")
+        print_exc()
+        raise err
 
 def writeTimeFile(timefile:VinttTimeFile,path:str)->None:
     """write to the timefile"""
