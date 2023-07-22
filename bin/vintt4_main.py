@@ -63,6 +63,8 @@ def opentimefile()->None:
 
     system("start timefile.yml")
 
+
+
 # --- static ---
 app.mount("/",
     StaticFiles(
@@ -73,3 +75,4 @@ app.mount("/",
 )
 
 Popen("chrome --window-size=500,500 --new-window http://localhost:4301")
+logger.info("server running: http://localhost:4301")
