@@ -1,13 +1,14 @@
 from loguru import logger
 from loguru._defaults import LOGURU_FORMAT
 from sys import stdout
+from typing import cast
 
 # --- config ---
 USE_MINIMAL_FORMAT:bool=False
 USE_MINIMAL_FORMAT2:bool=True
 # --- end config ---
 
-LOG_FORMAT:str=LOGURU_FORMAT
+LOG_FORMAT:str=cast(str,LOGURU_FORMAT)
 if USE_MINIMAL_FORMAT:
     LOG_FORMAT=(
         "<green>{time:HH:mm:ss}</green> | "+

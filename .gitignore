@@ -3,3 +3,4 @@ __pycache__
 tests/timefile.yml
 bin/timefile*.yml
 bin/vinttconfig*.yml*
+.stignore

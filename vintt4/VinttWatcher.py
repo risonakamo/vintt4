@@ -131,3 +131,15 @@ class VinttWatch:
                 self.trackItem.categories or []
             )
         }
+
+    def addCategory(self,category:str)->None:
+        """add category to current track item"""
+
+        if not self.trackItem:
+            logger.warning("no track item to add category to")
+            return
+
+        if not self.trackItem.categories:
+            self.trackItem.categories=[]
+
+        self.trackItem.categories.append(category)

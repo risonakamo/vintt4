@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.concurrency import run_in_threadpool
 from asyncio import ensure_future
@@ -11,7 +11,7 @@ import vintt4.log_control
 
 from typing import Optional
 from vintt4.types.vintt_watch_types import CurrentWatch
-from vintt4.types.web_api_types import SetCategoryReq
+from vintt4.types.web_api_types import NewCategoryReq, SetCategoryReq
 
 app:FastAPI=FastAPI()
 vinttwatch:Optional[VinttWatch]=None
@@ -62,6 +62,16 @@ def opentimefile()->None:
     """open timefile with system default program"""
 
     system("start timefile.yml")
+
+@app.post("/new-category")
+def newcategory(request:NewCategoryReq)->None:
+    """add new category"""
+
+    if not vinttwatch:
+        logger.error("no watch")
+        raise HTTPException(500,detail="no watch")
+
+    vinttwatch.addCategory(request.categoryName)
 
 
 
