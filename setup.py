@@ -10,6 +10,7 @@ setup(
         "loguru",
         "fastapi",
         "pyyaml",
-        "pydantic"
+        "pydantic",
+        "uvicorn"
     ]
 )

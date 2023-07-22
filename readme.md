@@ -4,10 +4,14 @@ time tracker v4
 track time of programs with sub categories per program
 
 # requirements
-- python conda environment
+- python conda environment (3.9+)
 - relatively up to date node (for building web assets)
 
 # installation
+1. `git submodule update --init --recursive`
+2. in the vintt3-web folder:
+    - `npm i`
+    - `npm run build`
 1. `git submodule update --init --recursive`
 2. in the vintt3-web folder:
     - `npm i`
