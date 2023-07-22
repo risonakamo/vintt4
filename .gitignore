@@ -1,5 +1,5 @@
 __pycache__
 *.egg-info
 tests/timefile.yml
-bin/timefile.yml
-bin/vinttconfig.yml
+bin/timefile*.yml
+bin/vinttconfig*.yml*
