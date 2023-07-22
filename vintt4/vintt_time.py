@@ -56,8 +56,8 @@ def getVinttTimeFile(path:str)->VinttTimeFile:
 def writeTimeFile(timefile:VinttTimeFile,path:str)->None:
     """write to the timefile"""
 
-    with open(path,"w") as timefilefile:
-        timefilefile.write(safe_dump(timefile))
+    with open(path,"w",encoding="utf-8") as timefilefile:
+        safe_dump(timefile,timefilefile,allow_unicode=True)
 
 def addCategoryTimeDefaults(categorytime:CategoryTime,categories:List[str])->CategoryTime:
     """given a list of categories, add these categories to a category time if they dont already

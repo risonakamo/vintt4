@@ -5,6 +5,7 @@ from asyncio import ensure_future
 from loguru import logger
 from subprocess import Popen
 from os import system
+from os.path import dirname,realpath,join
 
 from vintt4.VinttWatcher import VinttWatch,DEFAULT_WATCH
 import vintt4.log_control
@@ -12,6 +13,11 @@ import vintt4.log_control
 from typing import Optional
 from vintt4.types.vintt_watch_types import CurrentWatch
 from vintt4.types.web_api_types import NewCategoryReq, SetCategoryReq
+from vintt4.vintt_config import addCategoryToConfig
+
+HERE=dirname(realpath(__file__))
+TIMEFILE:str=join(HERE,"timefile.yml")
+VINTTCONFIG:str=join(HERE,"vinttconfig.yml")
 
 app:FastAPI=FastAPI()
 vinttwatch:Optional[VinttWatch]=None
@@ -21,8 +27,8 @@ def dowatch():
 
     global vinttwatch
     vinttwatch=VinttWatch(
-        configpath="vinttconfig.yml",
-        timefile="timefile.yml"
+        configpath=VINTTCONFIG,
+        timefile=TIMEFILE
     )
     vinttwatch.watchForProcess()
 
@@ -55,23 +61,29 @@ def setcategory(setCategoryReq:SetCategoryReq)->None:
 def openconfig()->None:
     """open config with system default program"""
 
-    system("start vinttconfig.yml")
+    system(f"start {VINTTCONFIG}")
 
 @app.get("/open-timefile")
 def opentimefile()->None:
     """open timefile with system default program"""
 
-    system("start timefile.yml")
+    system(f"start {TIMEFILE}")
 
 @app.post("/new-category")
 def newcategory(request:NewCategoryReq)->None:
     """add new category"""
 
-    if not vinttwatch:
+    if not vinttwatch or not vinttwatch.trackProcess:
         logger.error("no watch")
         raise HTTPException(500,detail="no watch")
 
     vinttwatch.addCategory(request.categoryName)
+
+    addCategoryToConfig(
+        path=VINTTCONFIG,
+        program=vinttwatch.trackProcess,
+        category=request.categoryName
+    )
 
 
 
